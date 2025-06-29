@@ -1,7 +1,7 @@
 import { AuthGuard } from './auth.guard';
 import { ExecutionContext } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { TokenEntity } from 'src/database/entities';
+import { TokenEntity } from '../../database/entities';
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;

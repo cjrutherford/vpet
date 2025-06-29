@@ -346,7 +346,7 @@ describe('AuthService', () => {
       const result = await service.login('test@example.com', 'password');
       expect(result).toBe(fakeToken);
       expect(tokenRepo.create).toHaveBeenCalledWith({
-        userId: mockUser.id,
+        user: { id: mockUser.id },
         token: fakeToken,
       });
       expect(tokenRepo.save).toHaveBeenCalled();
@@ -362,7 +362,7 @@ describe('AuthService', () => {
 
     const mockTokenEntity = {
     token: 'valid.token.here',
-    userId: 1,
+    user: {id: 1},
     isRevoked: false,
     };
     const mockAllTokens = [
@@ -404,8 +404,8 @@ describe('AuthService', () => {
     tokenRepo.save.mockImplementation(async (token) => token);
 
     const result = await service.logout('valid.token.here');
-    expect(tokenRepo.findOne).toHaveBeenCalledWith({ where: { token: 'valid.token.here' } });
-    expect(tokenRepo.find).toHaveBeenCalledWith({ where: { userId: 1 } });
+    expect(tokenRepo.findOne).toHaveBeenCalledWith({ where: { token: 'valid.token.here' }, relations: ['user'] });
+    expect(tokenRepo.find).toHaveBeenCalledWith({ where: { user: { id: 1 }} });
     expect(tokenRepo.save).toHaveBeenCalledTimes(mockAllTokens.length);
     expect(mockAllTokens.every(t => t.isRevoked)).toBe(true);
     expect(result).toBe('Logout successful');
